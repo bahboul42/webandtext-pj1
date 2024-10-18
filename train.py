@@ -12,15 +12,15 @@ import torch.optim as optim
 from tqdm import tqdm
 
 from rnn import LanguageModelOneHot, LanguageModelWord2Vec
-from utils import create_sequences, TextDataset
+from utils import create_sequences, TextDataset, generate_text, pretty_print_summary
 import argparse
 
 # use a parser to get the arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=str, default='hp.txt', help='path to the data file')
 parser.add_argument('--seq_length', type=int, default=50, help='sequence length')
-parser.add_argument('--batch_size', type=int, default=64, help='batch size')
-parser.add_argument('--mode', type=str, default='onehot', help='onehot or word2vec')
+parser.add_argument('--batch_size', type=int, default=256, help='batch size')
+parser.add_argument('--mode', type=str, default='word2vec', help='onehot or word2vec')
 parser.add_argument('--rnn_type', type=str, default='LSTM', help='LSTM or GRU')
 args = parser.parse_args()
 
@@ -30,13 +30,16 @@ seq_length = args.seq_length
 batch_size = args.batch_size
 mode = args.mode
 rnn_type = args.rnn_type
-hidden_dim = 256  
-num_layers = 2
+hidden_dim = 512  
+num_layers = 3
 lr = .003
 num_epochs = 10
 
 batch_num = 0
 log_interval = 100 
+
+pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval)
+
 
 with open(text_file, 'r', encoding='UTF-8') as f:
     train_data = f.read()
@@ -93,6 +96,9 @@ print("Using the following backend:", device)
 
 model.to(device)
 
+
+scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
+
 # Watch the model with wandb
 wandb.watch(model, log='all', log_freq=2)
 
@@ -136,9 +142,13 @@ for epoch in range(num_epochs):
 
 
     avg_loss = total_loss / len(train_dataloader)
+    perplexity = np.exp(avg_loss)
+    
+    scheduler.step()
+
     torch.save(model.state_dict(), f'./model_{epoch}.pt')
     
-    wandb.log({'epoch': epoch+1, 'avg_loss': avg_loss})
+    wandb.log({'epoch': epoch+1, 'avg_loss': avg_loss, 'perplexity': perplexity})
 
     # Log the model checkpoint as a wandb artifact
     artifact = wandb.Artifact(f'model_epoch_{epoch+1}', type='model', description='Model checkpoint')
@@ -146,3 +156,6 @@ for epoch in range(num_epochs):
     wandb.log_artifact(artifact)
 
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {avg_loss:.4f}')
+
+    generated_text = generate_text(model, seed_word="Harry", max_length=50, random_sampling=True, stoi=stoi, itos=itos, device=device)
+    print(generated_text)

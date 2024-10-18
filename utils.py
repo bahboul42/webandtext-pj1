@@ -67,6 +67,32 @@ def generate_text(model, seed_word, max_length=50, random_sampling=False, stoi=N
 def compute_perplexity(loss):
     return torch.exp(loss)
 
+
+def pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval):
+    summary = f"""
+    -------------------------------------
+               Model Summary
+    -------------------------------------
+    Data File         : {args.data}
+    Sequence Length   : {args.seq_length}
+    Batch Size        : {args.batch_size}
+    Mode              : {args.mode}
+    RNN Type          : {args.rnn_type}
+    
+    ---- Hyperparameters ----
+    Hidden Dimension  : {hidden_dim}
+    Number of Layers  : {num_layers}
+    Learning Rate     : {lr}
+    Number of Epochs  : {num_epochs}
+    Log Interval      : {log_interval}
+
+    --- LR Scheduler ---
+    Type              : 'Expon Decay'
+    Gamma             : 0.95
+    -------------------------------------
+    """
+    print(summary)
+
 # Perplexity
 # model.eval()
 # with torch.no_grad():
