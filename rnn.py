@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
+from gensim.models import Word2Vec
 
 class LanguageModelOneHot(nn.Module):
     def __init__(self, vocab_size, hidden_dim, num_layers, rnn_type='LSTM'):

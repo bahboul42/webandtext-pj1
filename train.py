@@ -57,7 +57,7 @@ print("Number of words in training data:", len(train_data))
 
 vocab_size = len(words_available)
 
-train_data = train_data[:10000]
+# train_data = train_data[:10000]
 
 # Initialize wandb with hyperparameters
 wandb.init(project="webandtext", config={
