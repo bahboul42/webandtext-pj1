@@ -68,7 +68,7 @@ def compute_perplexity(loss):
     return torch.exp(loss)
 
 
-def pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval):
+def pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval, if_sampling):
     summary = f"""
     -------------------------------------
                Model Summary
@@ -78,6 +78,7 @@ def pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_inter
     Batch Size        : {args.batch_size}
     Mode              : {args.mode}
     RNN Type          : {args.rnn_type}
+    Sampling          : {if_sampling}
     
     ---- Hyperparameters ----
     Hidden Dimension  : {hidden_dim}

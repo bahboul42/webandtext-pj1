@@ -22,6 +22,7 @@ parser.add_argument('--seq_length', type=int, default=50, help='sequence length'
 parser.add_argument('--batch_size', type=int, default=256, help='batch size')
 parser.add_argument('--mode', type=str, default='word2vec', help='onehot or word2vec')
 parser.add_argument('--rnn_type', type=str, default='LSTM', help='LSTM or GRU')
+parser.add_argument('--if_sampling', type=bool, default=False, help='True for random sampling, False for argmax')
 args = parser.parse_args()
 
 # HYPERPARAMETERS
@@ -30,6 +31,7 @@ seq_length = args.seq_length
 batch_size = args.batch_size
 mode = args.mode
 rnn_type = args.rnn_type
+if_sampling = args.if_sampling
 hidden_dim = 512  
 num_layers = 3
 lr = .003
@@ -38,7 +40,7 @@ num_epochs = 10
 batch_num = 0
 log_interval = 100 
 
-pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval)
+pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval, if_sampling)
 
 
 with open(text_file, 'r', encoding='UTF-8') as f:
@@ -55,6 +57,7 @@ print("Number of words in training data:", len(train_data))
 
 vocab_size = len(words_available)
 
+train_data = train_data[:10000]
 
 # Initialize wandb with hyperparameters
 wandb.init(project="webandtext", config={
@@ -143,7 +146,7 @@ for epoch in range(num_epochs):
 
     avg_loss = total_loss / len(train_dataloader)
     perplexity = np.exp(avg_loss)
-    
+
     scheduler.step()
 
     torch.save(model.state_dict(), f'./model_{epoch}.pt')
@@ -157,5 +160,5 @@ for epoch in range(num_epochs):
 
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {avg_loss:.4f}')
 
-    generated_text = generate_text(model, seed_word="Harry", max_length=50, random_sampling=True, stoi=stoi, itos=itos, device=device)
+    generated_text = generate_text(model, seed_word="Harry", max_length=50, random_sampling=if_sampling, stoi=stoi, itos=itos, device=device)
     print(generated_text)
