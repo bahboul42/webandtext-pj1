@@ -1,5 +1,0 @@
-[default]
-entity = g-delporte
-project = webandtext
-base_url = https://api.wandb.ai
-
