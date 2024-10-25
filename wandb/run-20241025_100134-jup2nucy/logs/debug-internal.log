@@ -1,0 +1,12 @@
+{"time":"2024-10-25T10:01:34.07231+02:00","level":"INFO","msg":"using version","core version":"0.18.5"}
+{"time":"2024-10-25T10:01:34.072352+02:00","level":"INFO","msg":"created symlink","path":"/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1/wandb/run-20241025_100134-jup2nucy/logs/debug-core.log"}
+{"time":"2024-10-25T10:01:34.561913+02:00","level":"INFO","msg":"created new stream","id":"jup2nucy"}
+{"time":"2024-10-25T10:01:34.561988+02:00","level":"INFO","msg":"stream: started","id":"jup2nucy"}
+{"time":"2024-10-25T10:01:34.562008+02:00","level":"INFO","msg":"sender: started","stream_id":"jup2nucy"}
+{"time":"2024-10-25T10:01:34.562037+02:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"jup2nucy"}}
+{"time":"2024-10-25T10:01:34.562075+02:00","level":"INFO","msg":"handler: started","stream_id":{"value":"jup2nucy"}}
+{"time":"2024-10-25T10:01:34.910039+02:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2024-10-25T10:01:34.977451+02:00","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-10-25T10:36:57.866099+02:00","level":"INFO","msg":"stream: closing","id":"jup2nucy"}
+{"time":"2024-10-25T10:36:57.866277+02:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2024-10-25T10:36:57.86752+02:00","level":"INFO","msg":"Stopped system monitor"}

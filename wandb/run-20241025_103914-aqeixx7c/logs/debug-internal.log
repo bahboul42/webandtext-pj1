@@ -1,0 +1,11 @@
+{"time":"2024-10-25T10:39:14.999748+02:00","level":"INFO","msg":"using version","core version":"0.18.5"}
+{"time":"2024-10-25T10:39:14.999779+02:00","level":"INFO","msg":"created symlink","path":"/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1/wandb/run-20241025_103914-aqeixx7c/logs/debug-core.log"}
+{"time":"2024-10-25T10:39:15.116417+02:00","level":"INFO","msg":"created new stream","id":"aqeixx7c"}
+{"time":"2024-10-25T10:39:15.116461+02:00","level":"INFO","msg":"stream: started","id":"aqeixx7c"}
+{"time":"2024-10-25T10:39:15.116502+02:00","level":"INFO","msg":"sender: started","stream_id":"aqeixx7c"}
+{"time":"2024-10-25T10:39:15.116487+02:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"aqeixx7c"}}
+{"time":"2024-10-25T10:39:15.116476+02:00","level":"INFO","msg":"handler: started","stream_id":{"value":"aqeixx7c"}}
+{"time":"2024-10-25T10:39:15.46511+02:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2024-10-25T10:39:15.584543+02:00","level":"INFO","msg":"Pausing system monitor"}
+{"time":"2024-10-25T10:39:21.608098+02:00","level":"INFO","msg":"Resuming system monitor"}
+{"time":"2024-10-25T10:40:54.078906+02:00","level":"INFO","msg":"Pausing system monitor"}
