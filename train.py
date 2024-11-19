@@ -1,93 +1,23 @@
+import torch
+from torch.utils.data import DataLoader
+import torch.optim as optim
+import torch.nn as nn
+from torcheval.metrics import WordErrorRate, Perplexity
+
 import wandb
 
-import torch.nn as nn
-import torch
-import numpy as np
+import tqdm
 
-import torch.nn.functional as F
-import re
-from torch.utils.data import DataLoader, Dataset
-import torch.optim as optim
+import gensim
 
-from tqdm import tqdm
-
-from rnn import LanguageModelOneHot, LanguageModelWord2Vec
-from utils import create_sequences, TextDataset, generate_text, pretty_print_summary
 import argparse
 
-# use a parser to get the arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--data', type=str, default='hp.txt', help='path to the data file')
-parser.add_argument('--seq_length', type=int, default=50, help='sequence length')
-parser.add_argument('--batch_size', type=int, default=256, help='batch size')
-parser.add_argument('--mode', type=str, default='word2vec', help='onehot or word2vec')
-parser.add_argument('--rnn_type', type=str, default='LSTM', help='LSTM or GRU')
-parser.add_argument('--if_sampling', type=bool, default=False, help='True for random sampling, False for argmax')
-args = parser.parse_args()
+from datasets import load_dataset
 
-# HYPERPARAMETERS
-text_file = args.data
-seq_length = args.seq_length
-batch_size = args.batch_size
-mode = args.mode
-rnn_type = args.rnn_type
-if_sampling = args.if_sampling
-hidden_dim = 512  
-num_layers = 3
-lr = .003
-num_epochs = 10
-
-batch_num = 0
-log_interval = 100 
-
-pretty_print_summary(args, hidden_dim, num_layers, lr, num_epochs, log_interval, if_sampling)
+from utils import tokenize_with_re, create_sequences, TextDataset, LanguageModelFastText, \
+      LanguageModelWord2Vec, pretty_print_summary
 
 
-with open(text_file, 'r', encoding='UTF-8') as f:
-    train_data = f.read()
-
-# Split train_data into words
-train_data = re.findall(r'\w+|[^\s\w]', train_data)
-words_available = sorted(list(set(train_data)))
-stoi = {word: i for i, word in enumerate(words_available)}
-itos = {i: word for i, word in enumerate(words_available)}
-train_data = [stoi[word] for word in train_data]
-
-print("Number of words in training data:", len(train_data))
-
-vocab_size = len(words_available)
-
-# train_data = train_data[:10000]
-
-# Initialize wandb with hyperparameters
-wandb.init(project="webandtext", config={
-    "text_file": text_file,
-    "seq_length": seq_length,
-    "batch_size": batch_size,
-    "mode": mode,
-    "rnn_type": rnn_type,
-    "hidden_dim": hidden_dim,
-    "num_layers": num_layers,
-    "lr": lr,
-    "num_epochs": num_epochs
-})
-
-sequences, targets = create_sequences(train_data, seq_length)
-dataset = TextDataset(sequences, targets)
-train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-if mode == 'onehot':
-    model = LanguageModelOneHot(vocab_size, hidden_dim,  num_layers, rnn_type)
-elif mode == 'word2vec':
-    model = LanguageModelWord2Vec(vocab_size, hidden_dim, num_layers, rnn_type)
-else:
-    raise ValueError("Invalid mode. Choose 'onehot' or 'word2vec'.")
-
-# Define loss function and optimizer
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=lr)
-
-# Move model to device (GPU or CPU)
 if torch.cuda.is_available():
     device = torch.device('cuda')
 elif torch.backends.mps.is_available():
@@ -95,70 +25,199 @@ elif torch.backends.mps.is_available():
 else:
     device = torch.device('cpu')
 
-print("Using the following backend:", device)
+print('Using device:', device)
 
-model.to(device)
+# wandb.login()
 
+def training_loop(model, dataloader, itos, vocab_size, hidden_dim=256, num_layers=3,
+                  rnn_type="lstm", learning_rate=0.0003, num_epochs=10, seq_length=50):
+    # Define loss function and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
+    # Initialize WER and Perplexity for both train and validation
+    wer = WordErrorRate()
+    train_perplexity = Perplexity()
 
-# Watch the model with wandb
-wandb.watch(model, log='all', log_freq=2)
+    if torch.cuda.is_available():
+        wer = wer.to(device)
+        train_perplexity = train_perplexity.to(device)
 
-# Training loop
-for epoch in range(num_epochs):
-    batch_num += 1
+    train_losses = {'crossentropy': [], 'wer': [], 'perplexity': []}
 
-    model.train()
-    hidden = None
-    total_loss = 0
-    
-    for inputs, targets in tqdm(train_dataloader):
+    # Move model to device (GPU or CPU)
+    model.to(device)  
+
+    # Training loop
+    for epoch in range(num_epochs):
+        model.train()
+        total_loss = 0
         hidden = None
-        inputs, targets = inputs.to(device), targets.to(device)
-        
-        # Zero the gradients
-        optimizer.zero_grad()
-        
-        # Forward pass
-        outputs, hidden = model(inputs, hidden)
-        
-        # Detach hidden states to prevent backpropagating through the entire training history
-        if isinstance(hidden, tuple):
-            hidden = tuple([h.detach() for h in hidden])
-        else:
-            hidden = hidden.detach()
-        
-        outputs = outputs.view(-1, vocab_size) 
-        targets = targets.view(-1)     
-        
-        # Compute loss
-        loss = criterion(outputs, targets)
-        
-        # Backward pass and optimization
-        loss.backward()
-        optimizer.step()
-        
-        total_loss += loss.item()
-        if batch_num % log_interval == 0:
-            wandb.log({'batch_loss': loss.item(), 'batch_num': batch_num, 'epoch': epoch+1})
 
+        # Initialize metrics for the epoch
+        wer.reset()
+        train_perplexity.reset()
 
-    avg_loss = total_loss / len(train_dataloader)
-    perplexity = np.exp(avg_loss)
+        for i, (inputs, targets) in tqdm(enumerate(dataloader), total=len(dataloader)):
+            hidden = None
+            inputs, targets = inputs.to(device), targets.to(device)
+        
+            # Zero the gradients
+            optimizer.zero_grad()
 
-    scheduler.step()
+            # Forward pass
+            outputs, hidden = model(inputs, hidden)
+            
+            # Detach hidden states to prevent backpropagating through the entire training history
+            if isinstance(hidden, tuple):
+                hidden = tuple([h.detach() for h in hidden])
+            else:
+                hidden = hidden.detach()
 
-    torch.save(model.state_dict(), f'./model_{epoch}.pt')
+            outputs = outputs.view(-1, vocab_size)
+            targets_buffer = targets
+            targets = targets.view(-1)
+
+            # Compute loss
+            loss = criterion(outputs, targets)
+            
+            # Backward pass and optimization
+            loss.backward()
+            optimizer.step()
+            
+            total_loss += loss.item()
+
+            # Calculate WER
+            # For WER and Perplexity, keep the original targets shape
+            preds = torch.argmax(outputs, dim=1)
+
+            spreds = [itos[p.item()] for p in preds]
+            stargets = [itos[t.item()] for t in targets]  # You might want to keep the same targets as for loss
+            wer.update(spreds, stargets)
+            
+            # Calculate perplexity using the original (2D) targets
+            if torch.cuda.is_available():
+                train_perplexity.update(outputs.view(outputs.size(0) // seq_length, seq_length, -1), targets_buffer)
+            else:
+                train_perplexity.update(outputs.view(outputs.size(0) // seq_length, seq_length, -1).cpu(), targets_buffer.cpu())  # Pass original target shape
+        
+        # Calculate training metrics
+        avg_train_loss = total_loss / len(dataloader)
+        avg_train_wer = wer.compute().item()
+        avg_train_perplexity = train_perplexity.compute().item()
+        
+        train_losses['crossentropy'].append(avg_train_loss)
+        train_losses['wer'].append(avg_train_wer)
+        train_losses['perplexity'].append(avg_train_perplexity)
+
+        # Save model
+        torch.save(model.state_dict(), f'model_weights/model_{rnn_type}_{embedding_type}_{hidden_dim}hidden_{num_layers}layers_{learning_rate}lr_{epoch+1}epoch.pt')
+
+        # Log the metrics to W&B
+        wandb.log({
+            'epoch': epoch+1,
+            'train_loss': avg_train_loss,
+            'train_WER': avg_train_wer,
+            'train_perplexity': avg_train_perplexity,
+        })
+
+        print(f'Epoch [{epoch+1}/{num_epochs}], Training Loss: {avg_train_loss:.4f}, Training WER: {avg_train_wer:.4f}, Training Perplexity: {avg_train_perplexity:.4f}')
+
+    return train_losses
+
+if __name__ == "__main__":
+    # Still need to add the arguments in this parser!
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--rnn_type", type=str, default='LSTM', help='LSTM or GRU') # RNN type
+    parser.add_argument("--embed_type", type=str, default='word2vec') # Type of embedding
+    parser.add_argument("--batch_size", type=int, default=32, help='batch size') # Batch size
+    parser.add_argument("--seq_length", type=int, default=50, help='sequence length') # Sequence length
+    parser.add_argument("--hidden_dim", type=int, default=256, help='hidden dimension') # Hidden dimension
+    parser.add_argument("--num_layers", type=int, default=3, help='number of layers') # Number of layers
+    parser.add_argument("--lr", type=float, default=0.0003, help='learning rate') # Learning rate
+    parser.add_argument("--num_epochs", type=int, default=10) # Number of epochs
+    parser.add_argument("--run_nbr", type=int, default=1, help='run number') # Run number
+    args = parser.parse_args()
+
+    # (Hyper)parameters
+    batch_size = args.batch_size
+    seq_length = args.seq_length
+    hidden_dim = args.hidden_dim
+    num_layers = args.num_layers
+    learning_rate = args.lr
+    num_epochs = args.num_epochs
+    rnn_type = args.rnn_type # Choose 'LSTM' or 'GRU'
+    embedding_type = args.embed_type # 'word2vec' or 'fasttext'
+
+    run_name = f"{embedding_type}_{rnn_type}_{args.run_nbr}"
+    wandb.init(project='webandtext-pj1',
+            entity='andreascoco',
+            name=run_name,
+            tags = [embedding_type, rnn_type],
+            group = embedding_type,
+            config={
+                'num_layers': num_layers,
+                'hidden_dim': hidden_dim,
+                'seq_length': seq_length,
+                'batch_size': batch_size,
+                'learning_rate': learning_rate
+            })
+
+    # Pretty print of the (hyper)parameters
+    pretty_print_summary(args)
+
+    train_data = load_dataset("Salesforce/wikitext", "wikitext-2-raw-v1")
+
+    train = train_data['train']['text']
+
+    # Tokenize each dataset split
+    train_tokenized = tokenize_with_re(train)
+    train_tokenized = train_tokenized[:len(train_tokenized)//2]  # Only use half of the training data
+
+    flat_train = [item for sublist in train_tokenized for item in sublist]
+
+    words_available = sorted(set(flat_train))
+    vocab_size = len(words_available)
+
+    print(f"Total number of words: {len(flat_train)}, vocabulary size: {len(words_available)}")
+
+    # Prepare the data:
+    if embedding_type == "word2vec":
+        embedding_model = gensim.models.Word2Vec.load('wikitext_small_word2vec.model')
+    elif embedding_type == "fasttext":
+        embedding_model = gensim.models.FastText.load('wikitext_small_fasttext.model')
+    else:
+        raise ValueError("Invalid embedding type. Please choose 'word2vec' or 'fasttext'.")
     
-    wandb.log({'epoch': epoch+1, 'avg_loss': avg_loss, 'perplexity': perplexity})
+    stoi = {word: idx for idx, word in enumerate(embedding_model.wv.index_to_key)}
+    itos = {idx: word for idx, word in enumerate(embedding_model.wv.index_to_key)}
 
-    # Log the model checkpoint as a wandb artifact
-    artifact = wandb.Artifact(f'model_epoch_{epoch+1}', type='model', description='Model checkpoint')
-    artifact.add_file(f'./model_{epoch}.pt')
-    wandb.log_artifact(artifact)
+    # Creating the sequences
+    sequences, targets = create_sequences(flat_train, seq_length, stoi)
 
-    print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {avg_loss:.4f}')
+    # Creating Dataset and DataLoader
+    dataset = TextDataset(sequences, targets)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    generated_text = generate_text(model, seed_word="Harry", max_length=50, random_sampling=if_sampling, stoi=stoi, itos=itos, device=device)
-    print(generated_text)
+    # Preparing for the training loop
+    # Getting embedding path
+    if embedding_type == "word2vec":
+        embed_path = 'wikitext_small_word2vec.model'
+    elif embedding_type == "fasttext":
+        embed_path = 'wikitext_small_fasttext.model'
+
+    # Initialize the model
+    model = LanguageModelWord2Vec(vocab_size, hidden_dim, num_layers, embedding_type, rnn_type, embed_path)
+
+    # Train the model
+    train_losses = training_loop(model, dataloader, itos, vocab_size, hidden_dim, num_layers, rnn_type, learning_rate, num_epochs, seq_length)
+
+
+
+
+    
+
+
+
+
+
