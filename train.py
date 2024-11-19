@@ -14,8 +14,7 @@ import argparse
 
 from datasets import load_dataset
 
-from utils import tokenize_with_re, create_sequences, TextDataset, LanguageModelFastText, \
-      LanguageModelWord2Vec, pretty_print_summary
+from utils import tokenize_with_re, create_sequences, TextDataset, LanguageModel, pretty_print_summary
 
 
 if torch.cuda.is_available():
@@ -207,7 +206,7 @@ if __name__ == "__main__":
         embed_path = 'wikitext_small_fasttext.model'
 
     # Initialize the model
-    model = LanguageModelWord2Vec(vocab_size, hidden_dim, num_layers, embedding_type, rnn_type, embed_path)
+    model = LanguageModel(vocab_size, hidden_dim, num_layers, embedding_type, rnn_type, embed_path)
 
     # Train the model
     train_losses = training_loop(model, dataloader, itos, vocab_size, hidden_dim, num_layers, rnn_type, learning_rate, num_epochs, seq_length)
