@@ -1,0 +1,16 @@
+{"time":"2024-11-19T12:16:05.277653+01:00","level":"INFO","msg":"using version","core version":"0.18.5"}
+{"time":"2024-11-19T12:16:05.277701+01:00","level":"INFO","msg":"created symlink","path":"/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1/wandb/run-20241119_121605-nnfil9dx/logs/debug-core.log"}
+{"time":"2024-11-19T12:16:05.388013+01:00","level":"INFO","msg":"created new stream","id":"nnfil9dx"}
+{"time":"2024-11-19T12:16:05.38805+01:00","level":"INFO","msg":"stream: started","id":"nnfil9dx"}
+{"time":"2024-11-19T12:16:05.388132+01:00","level":"INFO","msg":"sender: started","stream_id":"nnfil9dx"}
+{"time":"2024-11-19T12:16:05.388057+01:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"nnfil9dx"}}
+{"time":"2024-11-19T12:16:05.388055+01:00","level":"INFO","msg":"handler: started","stream_id":{"value":"nnfil9dx"}}
+{"time":"2024-11-19T12:16:05.69204+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2024-11-19T12:16:45.068662+01:00","level":"INFO","msg":"stream: closing","id":"nnfil9dx"}
+{"time":"2024-11-19T12:16:45.068686+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2024-11-19T12:16:45.069051+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2024-11-19T12:16:46.461047+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2024-11-19T12:16:46.726144+01:00","level":"INFO","msg":"handler: closed","stream_id":{"value":"nnfil9dx"}}
+{"time":"2024-11-19T12:16:46.726201+01:00","level":"INFO","msg":"sender: closed","stream_id":"nnfil9dx"}
+{"time":"2024-11-19T12:16:46.726178+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"nnfil9dx"}}
+{"time":"2024-11-19T12:16:46.726807+01:00","level":"INFO","msg":"stream: closed","id":"nnfil9dx"}

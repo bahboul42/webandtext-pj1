@@ -1,0 +1,45 @@
+{
+  "os": "macOS-14.6.1-arm64-arm-64bit",
+  "python": "3.12.3",
+  "startedAt": "2024-11-19T11:12:30.443640Z",
+  "args": [
+    "--rnn_type=GRU",
+    "--embed_type=word2vec",
+    "--batch_size=10",
+    "--num_epochs=1"
+  ],
+  "program": "/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1/train.py",
+  "codePath": "train.py",
+  "git": {
+    "remote": "https://github.com/bahboul42/webandtext-pj1.git",
+    "commit": "7d44d4559fb9f2b129a5c0dedfc1a240d2f73ba7"
+  },
+  "email": "andreascoco@outlook.com",
+  "root": "/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1",
+  "host": "MacBook-Air-2.local",
+  "username": "andreas",
+  "executable": "/Users/andreas/opt/miniconda3/envs/deep_learning/bin/python",
+  "codePathLocal": "train.py",
+  "cpu_count": 8,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "245107195904",
+      "used": "210925838336"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "cpu": {
+    "count": 8,
+    "countLogical": 8
+  },
+  "apple": {
+    "name": "Apple M2",
+    "ecpuCores": 4,
+    "pcpuCores": 4,
+    "gpuCores": 10,
+    "memoryGb": 16
+  }
+}

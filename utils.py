@@ -71,7 +71,7 @@ class LanguageModel(nn.Module):
             self.embedding_model = gensim.models.FastText.load(embed_path)
         else:
             raise ValueError("Invalid embedding type. Please choose 'word2vec' or 'fasttext'.")
-        
+
         # Get the embedding dimensions from the Gensim model
         embedding_dim = self.embedding_model.wv.vector_size
 

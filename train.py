@@ -175,16 +175,17 @@ if __name__ == "__main__":
 
     flat_train = [item for sublist in train_tokenized for item in sublist]
 
-    words_available = sorted(set(flat_train))
-    vocab_size = len(words_available)
-
-    print(f"Total number of words: {len(flat_train)}, vocabulary size: {len(words_available)}")
+    # Getting embedding path
+    if embedding_type == "word2vec":
+        embed_path = 'wikitext_small_word2vec.model'
+    elif embedding_type == "fasttext":
+        embed_path = 'wikitext_small_fasttext.model'
 
     # Prepare the data:
     if embedding_type == "word2vec":
-        embedding_model = gensim.models.Word2Vec.load('wikitext_small_word2vec.model')
+        embedding_model = gensim.models.Word2Vec.load(embed_path)
     elif embedding_type == "fasttext":
-        embedding_model = gensim.models.FastText.load('wikitext_small_fasttext.model')
+        embedding_model = gensim.models.FastText.load(embed_path)
     else:
         raise ValueError("Invalid embedding type. Please choose 'word2vec' or 'fasttext'.")
     
@@ -199,24 +200,13 @@ if __name__ == "__main__":
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     # Preparing for the training loop
-    # Getting embedding path
-    if embedding_type == "word2vec":
-        embed_path = 'wikitext_small_word2vec.model'
-    elif embedding_type == "fasttext":
-        embed_path = 'wikitext_small_fasttext.model'
+    vocab_size = len(embedding_model.wv)
+    print(f"Total number of words: {len(flat_train)}, vocabulary size: {vocab_size}")
 
     # Initialize the model
     model = LanguageModel(vocab_size, hidden_dim, num_layers, embedding_type, rnn_type, embed_path)
 
     # Train the model
     train_losses = training_loop(model, dataloader, itos, vocab_size, hidden_dim, num_layers, rnn_type, learning_rate, num_epochs, seq_length)
-
-
-
-
-    
-
-
-
 
 

@@ -1,0 +1,37 @@
+
+    -------------------------------------
+               Model Summary
+    -------------------------------------
+    RNN type          : GRU
+    Embedding type    : word2vec
+    Sequence Length   : 50
+    Batch Size        : 10
+
+    ---- Hyperparameters ----
+    Hidden Dimension  : 256
+    Number of Layers  : 3
+    Learning Rate     : 0.0003
+    Number of Epochs  : 1
+    -------------------------------------
+
+Total number of words: 841889, vocabulary size: 41314
+100%|███████████████████████████████████████████| 841839/841839 [00:04<00:00, 189319.28it/s]
+  0%|                                                             | 0/84184 [00:04<?, ?it/s]
+Traceback (most recent call last):
+  File "/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1/train.py", line 212, in <module>
+    train_losses = training_loop(model, dataloader, itos, vocab_size, hidden_dim, num_layers, rnn_type, learning_rate, num_epochs, seq_length)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andreas/Desktop/web&text analytics/projet1/webandtext-pj1/train.py", line 101, in training_loop
+    train_perplexity.update(outputs.view(outputs.size(0) // seq_length, seq_length, -1).cpu(), targets_buffer.cpu())  # Pass original target shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andreas/opt/miniconda3/envs/deep_learning/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andreas/opt/miniconda3/envs/deep_learning/lib/python3.12/site-packages/torcheval/metrics/text/perplexity.py", line 105, in update
+    sum_log_probs, num_total = _perplexity_update(input, target, self.ignore_index)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andreas/opt/miniconda3/envs/deep_learning/lib/python3.12/site-packages/torcheval/metrics/functional/text/perplexity.py", line 90, in _perplexity_update
+    _perplexity_input_check(input, target, ignore_index)
+  File "/Users/andreas/opt/miniconda3/envs/deep_learning/lib/python3.12/site-packages/torcheval/metrics/functional/text/perplexity.py", line 154, in _perplexity_input_check
+    raise ValueError(
+ValueError: Class labels in `target` tensor cannot be larger than vocab_size minus one, got vocab size of 41314 and target label of 49094.
