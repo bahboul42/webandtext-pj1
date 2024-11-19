@@ -6,7 +6,7 @@ from torcheval.metrics import WordErrorRate, Perplexity
 
 import wandb
 
-import tqdm
+from tqdm import tqdm
 
 import gensim
 
