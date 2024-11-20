@@ -49,7 +49,7 @@ def training_loop(model, dataloader, itos, vocab_size, hidden_dim=256, num_layer
 
     # Training loop
     for epoch in range(num_epochs):
-        model.train()
+        # model.train()
         total_loss = 0
         hidden = None
 
@@ -58,6 +58,7 @@ def training_loop(model, dataloader, itos, vocab_size, hidden_dim=256, num_layer
         train_perplexity.reset()
 
         for i, (inputs, targets) in tqdm(enumerate(dataloader), total=len(dataloader)):
+            model.train()
             hidden = None
             inputs, targets = inputs.to(device), targets.to(device)
         
@@ -87,6 +88,9 @@ def training_loop(model, dataloader, itos, vocab_size, hidden_dim=256, num_layer
             total_loss += loss.item()
 
             # Calculate WER
+            model.eval()
+            hidden = None
+            outputs, _ = model(inputs, hidden)
             # For WER and Perplexity, keep the original targets shape
             preds = torch.argmax(outputs, dim=1)
 
