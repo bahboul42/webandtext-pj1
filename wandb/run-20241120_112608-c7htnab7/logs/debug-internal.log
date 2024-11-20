@@ -1,0 +1,16 @@
+{"time":"2024-11-20T11:26:08.262394+01:00","level":"INFO","msg":"using version","core version":"0.18.7"}
+{"time":"2024-11-20T11:26:08.262472+01:00","level":"INFO","msg":"created symlink","path":"/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/wandb/run-20241120_112608-c7htnab7/logs/debug-core.log"}
+{"time":"2024-11-20T11:26:08.376789+01:00","level":"INFO","msg":"created new stream","id":"c7htnab7"}
+{"time":"2024-11-20T11:26:08.377054+01:00","level":"INFO","msg":"stream: started","id":"c7htnab7"}
+{"time":"2024-11-20T11:26:08.377106+01:00","level":"INFO","msg":"sender: started","stream_id":"c7htnab7"}
+{"time":"2024-11-20T11:26:08.377247+01:00","level":"INFO","msg":"writer: Do: started","stream_id":"c7htnab7"}
+{"time":"2024-11-20T11:26:08.377261+01:00","level":"INFO","msg":"handler: started","stream_id":"c7htnab7"}
+{"time":"2024-11-20T11:26:08.691179+01:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2024-11-20T11:27:12.679225+01:00","level":"INFO","msg":"stream: closing","id":"c7htnab7"}
+{"time":"2024-11-20T11:27:12.679409+01:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2024-11-20T11:27:12.679733+01:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2024-11-20T11:27:13.485921+01:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2024-11-20T11:27:13.837201+01:00","level":"INFO","msg":"handler: closed","stream_id":"c7htnab7"}
+{"time":"2024-11-20T11:27:13.837277+01:00","level":"INFO","msg":"sender: closed","stream_id":"c7htnab7"}
+{"time":"2024-11-20T11:27:13.837251+01:00","level":"INFO","msg":"writer: Close: closed","stream_id":"c7htnab7"}
+{"time":"2024-11-20T11:27:13.838075+01:00","level":"INFO","msg":"stream: closed","id":"c7htnab7"}

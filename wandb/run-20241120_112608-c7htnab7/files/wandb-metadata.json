@@ -1,0 +1,45 @@
+{
+  "os":  "macOS-15.0.1-arm64-arm-64bit",
+  "python":  "3.12.0",
+  "startedAt":  "2024-11-20T10:26:08.257287Z",
+  "args":  [
+    "--rnn_type",
+    "LSTM",
+    "--embed_type",
+    "fasttext"
+  ],
+  "program":  "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py",
+  "codePath":  "train.py",
+  "git":  {
+    "remote":  "git@github.com:bahboul42/webandtext-pj1.git",
+    "commit":  "0de6a259c7d26b2c3c34e7886165e4bf436e0fc7"
+  },
+  "email":  "guillaume.delporte52@gmail.com",
+  "root":  "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1",
+  "host":  "Guillaumes-MacBook-Pro.local",
+  "username":  "guilome",
+  "executable":  "/opt/miniconda3/envs/wet2/bin/python",
+  "codePathLocal":  "train.py",
+  "cpu_count":  11,
+  "cpu_count_logical":  11,
+  "disk":  {
+    "/":  {
+      "total":  "994662584320",
+      "used":  "389353050112"
+    }
+  },
+  "memory":  {
+    "total":  "19327352832"
+  },
+  "cpu":  {
+    "count":  11,
+    "countLogical":  11
+  },
+  "apple":  {
+    "name":  "Apple M3 Pro",
+    "ecpuCores":  6,
+    "pcpuCores":  5,
+    "gpuCores":  14,
+    "memoryGb":  18
+  }
+}

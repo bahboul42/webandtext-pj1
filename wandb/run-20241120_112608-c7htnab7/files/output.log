@@ -1,0 +1,36 @@
+
+    -------------------------------------
+               Model Summary
+    -------------------------------------
+    RNN type          : LSTM
+    Embedding type    : fasttext
+    Sequence Length   : 50
+    Batch Size        : 32
+
+    ---- Hyperparameters ----
+    Hidden Dimension  : 256
+    Number of Layers  : 3
+    Learning Rate     : 0.0003
+    Number of Epochs  : 10
+    -------------------------------------
+
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 841839/841839 [00:03<00:00, 212401.58it/s]
+Total number of words: 841889, vocabulary size: 49596
+  0%|▍                                                                                                                    | 97/26308 [00:53<4:02:25,  1.80it/s]
+Traceback (most recent call last):
+  File "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py", line 214, in <module>
+    train_losses = training_loop(model, dataloader, itos, vocab_size, hidden_dim, num_layers, rnn_type, learning_rate, num_epochs, seq_length)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py", line 105, in training_loop
+    train_perplexity.update(outputs.view(outputs.size(0) // seq_length, seq_length, -1).cpu(), targets_buffer.cpu())  # Pass original target shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/torcheval/metrics/text/perplexity.py", line 105, in update
+    sum_log_probs, num_total = _perplexity_update(input, target, self.ignore_index)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/torcheval/metrics/functional/text/perplexity.py", line 104, in _perplexity_update
+    sum_log_probs = -probs.log().sum()
+                     ^^^^^^^^^^^
+KeyboardInterrupt

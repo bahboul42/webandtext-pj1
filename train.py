@@ -153,8 +153,8 @@ if __name__ == "__main__":
     embedding_type = args.embed_type # 'word2vec' or 'fasttext'
 
     run_name = f"{embedding_type}_{rnn_type}_{args.run_nbr}"
-    wandb.init(project='webandtext-pj1',
-            entity='andreascoco',
+    wandb.init(project='project1',
+            entity='webandtext',
             name=run_name,
             tags = [embedding_type, rnn_type],
             group = embedding_type,

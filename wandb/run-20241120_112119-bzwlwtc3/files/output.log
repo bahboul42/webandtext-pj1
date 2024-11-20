@@ -1,0 +1,36 @@
+
+    -------------------------------------
+               Model Summary
+    -------------------------------------
+    RNN type          : LSTM
+    Embedding type    : word2vec
+    Sequence Length   : 50
+    Batch Size        : 32
+
+    ---- Hyperparameters ----
+    Hidden Dimension  : 256
+    Number of Layers  : 3
+    Learning Rate     : 0.0003
+    Number of Epochs  : 10
+    -------------------------------------
+
+Traceback (most recent call last):
+  File "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py", line 190, in <module>
+    embedding_model = gensim.models.Word2Vec.load(embed_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/gensim/models/word2vec.py", line 1953, in load
+    model = super(Word2Vec, cls).load(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/gensim/utils.py", line 485, in load
+    obj = unpickle(fname)
+          ^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/gensim/utils.py", line 1459, in unpickle
+    with open(fname, 'rb') as f:
+         ^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/smart_open/smart_open_lib.py", line 177, in open
+    fobj = _shortcut_open(
+           ^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/smart_open/smart_open_lib.py", line 363, in _shortcut_open
+    return _builtin_open(local_path, mode, buffering=buffering, **open_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'wikitext_small_word2vec.model'

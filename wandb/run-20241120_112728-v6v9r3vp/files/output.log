@@ -1,0 +1,25 @@
+
+    -------------------------------------
+               Model Summary
+    -------------------------------------
+    RNN type          : LSTM
+    Embedding type    : fasttext
+    Sequence Length   : 50
+    Batch Size        : 32
+
+    ---- Hyperparameters ----
+    Hidden Dimension  : 256
+    Number of Layers  : 3
+    Learning Rate     : 0.0003
+    Number of Epochs  : 10
+    -------------------------------------
+
+ 68%|███████████████████████████████████████████████████████████████████████████                                   | 574818/841839 [00:02<00:01, 205917.37it/s]
+Traceback (most recent call last):
+  File "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py", line 200, in <module>
+    sequences, targets = create_sequences(flat_train, seq_length, stoi)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/utils.py", line 38, in create_sequences
+    target_indices = [stoi.get(word, 0) for word in target]
+                      ^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

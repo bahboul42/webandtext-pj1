@@ -1,0 +1,29 @@
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Current SDK version is 0.18.7
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Configure stats pid to 86579
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Loading settings from /Users/guilome/.config/wandb/settings
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Loading settings from /Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/wandb/settings
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Loading settings from environment variables: {}
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Applying setup settings: {'mode': None, '_disable_service': None}
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Inferring run settings from compute environment: {'program_relpath': 'train.py', 'program_abspath': '/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py', 'program': '/Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/train.py'}
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_setup.py:_flush():79] Applying login settings: {}
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_init.py:_log_setup():533] Logging user logs to /Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/wandb/run-20241120_111955-aesx1wjj/logs/debug.log
+2024-11-20 11:19:55,698 INFO    MainThread:86579 [wandb_init.py:_log_setup():534] Logging internal logs to /Users/guilome/Documents/University/M2/Web And Text/Pj1/webandtext-pj1/wandb/run-20241120_111955-aesx1wjj/logs/debug-internal.log
+2024-11-20 11:19:55,699 INFO    MainThread:86579 [wandb_init.py:init():619] calling init triggers
+2024-11-20 11:19:55,699 INFO    MainThread:86579 [wandb_init.py:init():626] wandb.init called with sweep_config: {}
+config: {'num_layers': 3, 'hidden_dim': 256, 'seq_length': 50, 'batch_size': 32, 'learning_rate': 0.0003}
+2024-11-20 11:19:55,699 INFO    MainThread:86579 [wandb_init.py:init():669] starting backend
+2024-11-20 11:19:55,699 INFO    MainThread:86579 [wandb_init.py:init():673] sending inform_init request
+2024-11-20 11:19:55,702 INFO    MainThread:86579 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=spawn,fork,forkserver, using: spawn
+2024-11-20 11:19:55,703 INFO    MainThread:86579 [wandb_init.py:init():686] backend started and connected
+2024-11-20 11:19:55,710 INFO    MainThread:86579 [wandb_init.py:init():781] updated telemetry
+2024-11-20 11:19:55,733 INFO    MainThread:86579 [wandb_init.py:init():814] communicating run to backend with 90.0 second timeout
+2024-11-20 11:19:56,198 ERROR   MainThread:86579 [wandb_init.py:init():841] encountered error: failed to upsert bucket: returned error 400 Bad Request: {"errors":[{"message":"you may not log runs directly to your organization, please try using your team entity","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2024-11-20 11:19:56,198 ERROR   MainThread:86579 [wandb_init.py:init():1266] error in wandb.init()
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/wandb/sdk/wandb_init.py", line 1256, in init
+    return wi.init()
+           ^^^^^^^^^
+  File "/opt/miniconda3/envs/wet2/lib/python3.12/site-packages/wandb/sdk/wandb_init.py", line 847, in init
+    raise error
+wandb.errors.errors.CommError: failed to upsert bucket: returned error 400 Bad Request: {"errors":[{"message":"you may not log runs directly to your organization, please try using your team entity","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2024-11-20 11:19:56,202 WARNING MsgRouterThr:86579 [router.py:message_loop():75] message_loop has been closed
